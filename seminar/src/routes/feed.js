@@ -11,7 +11,7 @@ class FeedDB {
 
   #id = 1;
   #itemCount = 1;
-  #LDataDB = [{ id: 0, title: 'test1', content: 'Example body' }];
+  #LDataDB = [];
 
   constructor() {
     console.log('[Feed-DB] DB Init Completed');
@@ -33,12 +33,11 @@ class FeedDB {
   };
 
   editItem = (item) => {
-    console.log("editItem called");
+    console.log('editItem called');
     const { id, title, content } = item;
-    this.#LDataDB = this.#LDataDB.filter((value) => {
-      return value.id !== id;
-    });
-    this.#LDataDB.push({ id: this.#id, title, content });
+    this.#LDataDB.map((item) =>
+      item.id === id ? { id: id, title: title, content: content } : item
+    );
     //this.#id++; this.#itemCount++;
     return true;
   };
