@@ -35,7 +35,7 @@ const FeedPage = (props: {}) => {
     return () => {
       BComponentExited = true;
     };
-  }, [NPostCount]);
+  }, [NPostCount, NEditCount]);
 
   const createNewPost = () => {
     const asyncFun = async () => {

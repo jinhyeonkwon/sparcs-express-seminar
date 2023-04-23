@@ -33,11 +33,15 @@ class FeedDB {
   };
 
   editItem = (item) => {
-    console.log('editItem called');
+    console.log('editItem called', item);
+    console.log('prev', this.#LDataDB);
     const { id, title, content } = item;
-    this.#LDataDB.map((item) =>
-      item.id === id ? { id: id, title: title, content: content } : item
-    );
+    this.#LDataDB = this.#LDataDB.filter((value) => {
+      return value.id != parseInt(id);
+    });
+    this.#LDataDB.push({ id: id + '', title: title, content: content });
+    this.#LDataDB.sort((a, b) => (a.id > b.id ? 1 : b.id > a.id ? -1 : 0));
+    console.log('after ', this.#LDataDB);
     //this.#id++; this.#itemCount++;
     return true;
   };
@@ -80,7 +84,7 @@ router.post('/addFeed', (req, res) => {
 
 router.post('/editFeed', (req, res) => {
   try {
-    console.log(`editFeed 진입 : ${req.body}`);
+    //alert(`editFeed 진입 : ${req.body}`);
     const { id, title, content } = req.body;
     const editResult = feedDBInst.editItem({ id, title, content });
     if (!editResult) return res.status(500).json({ error: dbRes.data });
