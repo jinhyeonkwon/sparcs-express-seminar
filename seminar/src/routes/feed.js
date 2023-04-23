@@ -36,11 +36,12 @@ class FeedDB {
     console.log('editItem called', item);
     console.log('prev', this.#LDataDB);
     const { id, title, content } = item;
-    this.#LDataDB = this.#LDataDB.filter((value) => {
-      return value.id != parseInt(id);
+    this.#LDataDB.forEach((value) => {
+      if (value.id == id) {
+        value.title = title;
+        value.content = content;
+      }
     });
-    this.#LDataDB.push({ id: id + '', title: title, content: content });
-    this.#LDataDB.sort((a, b) => (a.id > b.id ? 1 : b.id > a.id ? -1 : 0));
     console.log('after ', this.#LDataDB);
     //this.#id++; this.#itemCount++;
     return true;
