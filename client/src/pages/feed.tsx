@@ -38,13 +38,20 @@ const FeedPage = (props: {}) => {
       BComponentExited = true;
     };
   }, [NPostCount, SSearchItem, NEditCount]);
+
+  const createNewPost = () => {
     const asyncFun = async () => {
+      const response = await axios.post(SAPIBase + '/feed/addFeed', {
         title: SNewPostTitle,
         content: SNewPostContent,
       });
-      setNPostCount(NPostCount + 1);
-      setSNewPostTitle('');
-      setSNewPostContent('');
+      if (response.status === 200) {
+        setNPostCount(NPostCount + 1);
+        setSNewPostTitle('');
+        setSNewPostContent('');
+      } else {
+        alert("Couldn't create new post!");
+      }
     };
     asyncFun().catch((e) => window.alert(`AN ERROR OCCURED! ${e}`));
   };
@@ -60,14 +67,18 @@ const FeedPage = (props: {}) => {
   //HW2 : Edit 추가 -----------------------------
   const editPost = (id: string) => {
     const asyncFun = async () => {
-      await axios.post(SAPIBase + '/feed/editFeed', {
+      const response = await axios.post(SAPIBase + '/feed/editFeed', {
         id: id,
         title: SEditPostTitle,
         content: SEditPostContent,
       });
-      setNEditCount(NEditCount + 1);
-      setSEditPostTitle('');
-      setSEditPostContent('');
+      if (response.status === 200) {
+        setNEditCount(NEditCount + 1);
+        setSEditPostTitle('');
+        setSEditPostContent('');
+      } else {
+        alert("Couldn't edit post!");
+      }
     };
     asyncFun().catch((e) => window.alert(`AN ERROR OCCURED! ${e}`));
 
