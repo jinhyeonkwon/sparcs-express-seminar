@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const statusRouter = require('./routes/status');
@@ -15,13 +16,13 @@ app.use(express.json());
 
 const whitelist = ['http://localhost:3000'];
 const corsOptions = {
-    origin: (origin, callback) => {
-        console.log('[REQUEST-CORS] Request from origin: ', origin);
-        if (!origin || whitelist.indexOf(origin) !== -1) callback(null, true)
-        else callback(new Error('Not Allowed by CORS'));
-    },
-    credentials: true,
-}
+  origin: (origin, callback) => {
+    console.log('[REQUEST-CORS] Request from origin: ', origin);
+    if (!origin || whitelist.indexOf(origin) !== -1) callback(null, true);
+    else callback(new Error('Not Allowed by CORS'));
+  },
+  credentials: true,
+};
 
 app.use(cors(corsOptions));
 
@@ -30,8 +31,20 @@ app.use('/feed', feedRouter);
 app.use('/account', accountRouter);
 app.use('/ssr', ssrRouter);
 
-app.use('/static', express.static(path.join(__dirname,'public')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+// Connect to MongoDB
+const OMongooseOption = { useNewUrlParser: true, useUnifiedTopology: true };
+// console.log(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, OMongooseOption).then(
+  () => {
+    console.log('[Mongoose] Connection Complete!');
+  },
+  (err) => {
+    console.log(`[Mongoose] Connection Error: ${err}`);
+  }
+);
 
 app.listen(port, () => {
-   console.log(`Example App Listening @ http://localhost:${ port }`);
+  console.log(`Example App Listening @ http://localhost:${port}`);
 });

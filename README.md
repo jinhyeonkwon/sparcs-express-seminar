@@ -11,4 +11,3 @@ Code by [Jiho Park](https://github.com/UrWrstNightmare) (Night @ SPARCS)
 
 
 ### How to Run
-"# sparcs-express-seminar" 

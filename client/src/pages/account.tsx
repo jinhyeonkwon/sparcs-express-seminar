@@ -5,8 +5,7 @@ import { SAPIBase } from '../tools/api';
 import './css/account.css';
 
 const AccountPage = () => {
-  const [SID, setSID] = React.useState<string>('');
-  const [SPW, setSPW] = React.useState<string>('');
+  const [SAPIKEY, setSAPIKEY] = React.useState<string>('');
   const [NBalance, setNBalance] = React.useState<number | 'Not Authorized'>(
     'Not Authorized'
   );
@@ -19,7 +18,7 @@ const AccountPage = () => {
       }
       const { data } = await axios.post<IAPIResponse>(
         SAPIBase + '/account/getInfo',
-        { id: SID, pw: SPW }
+        { credential: SAPIKEY }
       );
       setNBalance(data.balance);
     };
@@ -36,7 +35,7 @@ const AccountPage = () => {
       }
       const { data } = await axios.post<IAPIResponse>(
         SAPIBase + '/account/transaction',
-        { id: SID, pw: SPW, amount: amount }
+        { credential: SAPIKEY, amount: amount }
       );
       setNTransaction(0);
       if (!data.success) {
@@ -57,22 +56,14 @@ const AccountPage = () => {
       <Header />
       <h2>Account</h2>
       <div className={'account-token-input'}>
-        Enter ID:{' '}
+        Enter API Key:{' '}
         <input
           type={'text'}
-          value={SID}
-          onChange={(e) => setSID(e.target.value)}
+          value={SAPIKEY}
+          onChange={(e) => setSAPIKEY(e.target.value)}
         />
+        <button onClick={(e) => getAccountInformation()}>GET</button>
       </div>
-      <div className={'account-token-input'}>
-        Enter Password:{' '}
-        <input
-          type={'password'}
-          value={SPW}
-          onChange={(e) => setSPW(e.target.value)}
-        />
-      </div>
-      <button onClick={(e) => getAccountInformation()}>GET</button>
       <div className={'account-bank'}>
         <h3>The National Bank of SPARCS API</h3>
         <div className={'balance'}>

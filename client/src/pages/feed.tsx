@@ -5,9 +5,10 @@ import Header from '../components/header';
 import './css/feed.css';
 
 interface IAPIResponse {
-  id: number;
+  _id: string;
   title: string;
   content: string;
+  itemViewCnt: number;
 }
 
 const FeedPage = (props: {}) => {
@@ -15,6 +16,7 @@ const FeedPage = (props: {}) => {
   const [NPostCount, setNPostCount] = React.useState<number>(0);
   const [SNewPostTitle, setSNewPostTitle] = React.useState<string>('');
   const [SNewPostContent, setSNewPostContent] = React.useState<string>('');
+  const [SSearchItem, setSSearchItem] = React.useState<string>('');
   const [SEditPostTitle, setSEditPostTitle] = React.useState<string>('');
   const [SEditPostContent, setSEditPostContent] = React.useState<string>('');
   const [SEditingID, setSEditingID] = React.useState<string>('');
@@ -24,7 +26,7 @@ const FeedPage = (props: {}) => {
     let BComponentExited = false;
     const asyncFun = async () => {
       const { data } = await axios.get<IAPIResponse[]>(
-        SAPIBase + `/feed/getFeed?count=${NPostCount}`
+        SAPIBase + `/feed/getFeed?count=${NPostCount}&search=${SSearchItem}`
       );
       console.log(data);
       // const data = [ { id: 0, title: "test1", content: "Example body" }, { id: 1, title: "test2", content: "Example body" }, { id: 2, title: "test3", content: "Example body" } ].slice(0, NPostCount);
@@ -35,11 +37,8 @@ const FeedPage = (props: {}) => {
     return () => {
       BComponentExited = true;
     };
-  }, [NPostCount, NEditCount]);
-
-  const createNewPost = () => {
+  }, [NPostCount, SSearchItem, NEditCount]);
     const asyncFun = async () => {
-      await axios.post(SAPIBase + '/feed/addFeed', {
         title: SNewPostTitle,
         content: SNewPostContent,
       });
@@ -58,7 +57,7 @@ const FeedPage = (props: {}) => {
     };
     asyncFun().catch((e) => window.alert(`AN ERROR OCCURED! ${e}`));
   };
-
+  //HW2 : Edit 추가 -----------------------------
   const editPost = (id: string) => {
     const asyncFun = async () => {
       await axios.post(SAPIBase + '/feed/editFeed', {
@@ -78,9 +77,11 @@ const FeedPage = (props: {}) => {
   };
 
   const showInput = (id: string) => {
+    console.log(`showInput: ${id}`);
     setSEditingID(id);
     console.log(`SEditingID: ${SEditingID}`);
   };
+  //---------------------------------------------
 
   return (
     <div className="Feed">
@@ -96,25 +97,36 @@ const FeedPage = (props: {}) => {
           onChange={(e) => setNPostCount(parseInt(e.target.value))}
         />
       </div>
+      <div className={'feed-length-input'}>
+        Search Keyword: &nbsp;&nbsp;
+        <input
+          type={'text'}
+          value={SSearchItem}
+          id={'post-search-input'}
+          onChange={(e) => setSSearchItem(e.target.value)}
+        />
+      </div>
       <div className={'feed-list'}>
         {LAPIResponse.map((val, i) => (
           <div key={i} className={'feed-item'}>
             <div
               className={'delete-item'}
-              onClick={(e) => deletePost(`${val.id}`)}
+              onClick={(e) => deletePost(`${val._id}`)}
             >
               ⓧ
             </div>
             <div
               className={'edit-item'}
-              onClick={(e) => showInput(`${val.id}`)}
+              onClick={(e) => showInput(`${val._id}`)}
             >
               ✒
             </div>
             <h3 className={'feed-title'}>{val.title}</h3>
             <p className={'feed-body'}>{val.content}</p>
             <div
-              className={`${SEditingID === `${val.id}` ? 'visible' : 'hidden'}`}
+              className={`${
+                SEditingID == `${val._id}` ? 'visible' : 'hidden'
+              }`}
             >
               New Title:{' '}
               <input
@@ -129,7 +141,7 @@ const FeedPage = (props: {}) => {
                 onChange={(e) => setSEditPostContent(e.target.value)}
               />
               &nbsp;&nbsp;
-              <button onClick={(e) => editPost(`${val.id}`)}>Edit!</button>
+              <button onClick={(e) => editPost(`${val._id}`)}>Edit!</button>
             </div>
           </div>
         ))}
