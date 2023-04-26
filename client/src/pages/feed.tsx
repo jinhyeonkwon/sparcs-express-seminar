@@ -124,9 +124,7 @@ const FeedPage = (props: {}) => {
             <h3 className={'feed-title'}>{val.title}</h3>
             <p className={'feed-body'}>{val.content}</p>
             <div
-              className={`${
-                SEditingID == `${val._id}` ? 'visible' : 'hidden'
-              }`}
+              className={`${SEditingID == `${val._id}` ? 'visible' : 'hidden'}`}
             >
               New Title:{' '}
               <input
