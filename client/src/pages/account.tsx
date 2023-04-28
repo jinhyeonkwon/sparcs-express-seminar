@@ -5,7 +5,9 @@ import { SAPIBase } from '../tools/api';
 import './css/account.css';
 
 const AccountPage = () => {
-  const [SAPIKEY, setSAPIKEY] = React.useState<string>('');
+  //const [SAPIKEY, setSAPIKEY] = React.useState<string>('');
+  const [SID, setSID] = React.useState<string>('');
+  const [SPassword, setSPassword] = React.useState<string>('');
   const [NBalance, setNBalance] = React.useState<number | 'Not Authorized'>(
     'Not Authorized'
   );
@@ -18,7 +20,7 @@ const AccountPage = () => {
       }
       const { data } = await axios.post<IAPIResponse>(
         SAPIBase + '/account/getInfo',
-        { credential: SAPIKEY }
+        { id: SID, password: SPassword }
       );
       setNBalance(data.balance);
     };
@@ -35,7 +37,7 @@ const AccountPage = () => {
       }
       const { data } = await axios.post<IAPIResponse>(
         SAPIBase + '/account/transaction',
-        { credential: SAPIKEY, amount: amount }
+        { id: SID, password: SPassword, amount: amount }
       );
       setNTransaction(0);
       if (!data.success) {
@@ -56,11 +58,17 @@ const AccountPage = () => {
       <Header />
       <h2>Account</h2>
       <div className={'account-token-input'}>
-        Enter API Key:{' '}
+        Enter ID:{' '}
         <input
           type={'text'}
-          value={SAPIKEY}
-          onChange={(e) => setSAPIKEY(e.target.value)}
+          value={SID}
+          onChange={(e) => setSID(e.target.value)}
+        />
+        Enter Password:{' '}
+        <input
+          type={'text'}
+          value={SPassword}
+          onChange={(e) => setSPassword(e.target.value)}
         />
         <button onClick={(e) => getAccountInformation()}>GET</button>
       </div>
