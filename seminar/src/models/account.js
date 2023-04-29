@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const OSchemaDefinition = {
   id: String,
-  total: Number,
+  balance: Number,
 };
 
 const OSchemaOptions = { timestamps: true };

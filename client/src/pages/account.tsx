@@ -39,6 +39,7 @@ const AccountPage = () => {
         SAPIBase + '/account/transaction',
         { id: SID, password: SPassword, amount: amount }
       );
+      console.log(data);
       setNTransaction(0);
       if (!data.success) {
         window.alert('Transaction Failed:' + data.msg);
@@ -64,9 +65,9 @@ const AccountPage = () => {
           value={SID}
           onChange={(e) => setSID(e.target.value)}
         />
-        Enter Password:{' '}
+        &nbsp;&nbsp;Enter Password:{' '}
         <input
-          type={'text'}
+          type={'password'}
           value={SPassword}
           onChange={(e) => setSPassword(e.target.value)}
         />

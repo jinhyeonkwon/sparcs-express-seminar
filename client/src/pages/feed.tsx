@@ -9,6 +9,7 @@ interface IAPIResponse {
   title: string;
   content: string;
   itemViewCnt: number;
+  postCount: number;
 }
 
 const FeedPage = (props: {}) => {
@@ -21,6 +22,22 @@ const FeedPage = (props: {}) => {
   const [SEditPostContent, setSEditPostContent] = React.useState<string>('');
   const [SEditingID, setSEditingID] = React.useState<string>('');
   const [NEditCount, setNEditCount] = React.useState<number>(0);
+
+  // 처음 켤 때 딱 현재 저장된 post 개수만큼 띄우고 싶어서 추가한 코드 ----------------
+  // 이거 위해서 IAPIResponse interface에 postCount 추가함!
+  const numberOfPost = () => {
+    const asyncFun = async () => {
+      // One can set X-HTTP-Method header to DELETE to specify deletion as well
+      const { data } = await axios.get<IAPIResponse>( // 의문 : IAPIResponse[]로 하면 왜 안되지?? getFeed는 [] 붙였는데..?
+        SAPIBase + '/feed/getCount'
+      );
+      setNPostCount(data.postCount);
+    };
+    asyncFun().catch((e) => window.alert(`AN ERROR OCCURED! ${e}`));
+  };
+
+  numberOfPost();
+  //--------------------------------------------------------------------------------
 
   React.useEffect(() => {
     let BComponentExited = false;

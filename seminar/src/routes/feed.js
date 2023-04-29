@@ -79,6 +79,16 @@ class FeedDB {
       return false;
     }
   };
+
+  count = async () => {
+    try {
+      const cnt = FeedModel.find().count();
+      return cnt;
+    } catch (e) {
+      console.log(`[Feed-DB] Count Error: ${e}`);
+      return -1;
+    }
+  };
   //-------------------------------------
 }
 
@@ -91,6 +101,15 @@ router.get('/getFeed', async (req, res) => {
     const dbRes = await feedDBInst.selectItems(requestCount, searchString);
     if (dbRes.success) return res.status(200).json(dbRes.data);
     else return res.status(500).json({ error: dbRes.data });
+  } catch (e) {
+    return res.status(500).json({ error: e });
+  }
+});
+// 개수만큼 띄우기 위해 count 넘겨주는 부분 추가함
+router.get('/getCount', async (req, res) => {
+  try {
+    const count = await feedDBInst.count();
+    return res.status(200).json({postCount: count});
   } catch (e) {
     return res.status(500).json({ error: e });
   }
